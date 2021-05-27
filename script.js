@@ -12,6 +12,17 @@ for (i=0; i<16; i++){
     }
 }
 
-function mouseOver(aux){
-    aux.style.backgroundColor = 'black';
+function randomColor() {
+    let colorStr = 'rgb(';
+    let randomNum = Math.floor(Math.random()* 255);
+    colorStr+=randomNum +',';
+    randomNum = Math.floor(Math.random()* 255);
+    colorStr+=randomNum+',';
+    randomNum = Math.floor(Math.random()* 255);
+    colorStr+=randomNum+')';
+    return colorStr;
+}
+
+function mouseOver(aItem){
+    aItem.style.backgroundColor = randomColor();
 }
