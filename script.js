@@ -1,11 +1,32 @@
 const container = document.querySelector('#grid-container');
 const clearButton = document.querySelector('#clear-button');
 const changeButton = document.querySelector('#change-button');
+const changeColor = document.querySelector('#colorpicker');
+const randomButton = document.querySelector('#random-button');
 let size=16;
+let paint = false;
+let random = true;
 
 clearButton.addEventListener("click", resetGrid);
 changeButton.addEventListener("click", changeSize);
 window.addEventListener("load", setGrid);
+container.addEventListener("click", setPainting);
+randomButton.addEventListener("click", setRandom);
+changeColor.addEventListener('input', chooseColor);
+
+function setColor() {
+    (random) ? color = randomColor() : color;
+    return color;
+}
+
+function setRandom() {
+    random = true;
+}
+
+function chooseColor() {
+    random = false;
+    color = this.value;
+}
 
 function setGrid() {
     let i, j;
@@ -17,6 +38,10 @@ function setGrid() {
             container.appendChild(grd);
         }
     }
+}
+
+function setPainting() {
+    paint = !paint;
 }
 
 function randomColor() {
@@ -31,7 +56,7 @@ function randomColor() {
 }
 
 function mouseOver(aItem){
-    aItem.style.backgroundColor = randomColor();
+    if (paint) aItem.style.backgroundColor =  setColor();
 }
 
 function resetGrid() {
