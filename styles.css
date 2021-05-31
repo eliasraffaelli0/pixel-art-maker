@@ -1,15 +1,6 @@
-/* html {
-}
-
-body {
-    display: table-cell;
-    vertical-align: middle;
-} */
-/* html {
+html {
     font-family: "Roboto", sans-serif;
-    font-size: 62.5%;
-    line-height: 1.6;
-} */
+}
 
 html, body {
     min-height: 100%;
@@ -20,6 +11,9 @@ body {
     display: table;
     margin: auto;
     text-align: center;
+}
+h1 {
+    color: rgb(80, 80, 80);
 }
 #grid-container {
     margin: auto;
@@ -36,7 +30,7 @@ body {
 }
 
 button {
-    background-color: #F0EEEE;;
+    background-color: #F0EEEE;
     padding: 5px;
     margin: 5px;
     border: 2px solid #d3dae8;

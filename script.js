@@ -4,10 +4,15 @@ const changeButton = document.querySelector('#change-button');
 const changeColor = document.querySelector('#colorpicker');
 const randomButton = document.querySelector('#random-button');
 const gridLinesButton = document.querySelector('#grid-lines-button');
+const eraserButton = document.querySelector("#eraser-button")
 let size=16;
 let paint = false;
-let random = true;
+let random = false;
 let gridLines = true;
+let eraser = false;
+let color = "black";
+//to save the last color used before eraser is activated
+let colorTemp;
 
 clearButton.addEventListener("click", resetGrid);
 changeButton.addEventListener("click", changeSize);
@@ -15,7 +20,27 @@ window.addEventListener("load", setGrid);
 container.addEventListener("click", setPainting);
 randomButton.addEventListener("click", setRandom);
 changeColor.addEventListener('input', chooseColor);
+eraserButton.addEventListener("click", toggleEraser);
 gridLinesButton.addEventListener("click", toggleGridLines);
+
+function toggleEraser() {
+    if (!eraser){
+        colorTemp = color;
+        console.log(colorTemp)
+        color = "#FFF";
+        eraser = true;
+        random = false;
+        eraserButton.style.backgroundColor = "#333";
+        eraserButton.style.border = "2px solid #222";
+        eraserButton.style.color = "#FFF"
+    } else {
+        color = colorTemp;
+        eraser = false;
+        eraserButton.style.backgroundColor = "#F0EEEE";
+        eraserButton.style.border = "2px solid #d3dae8";
+        eraserButton.style.color = "#000"
+    }
+}
 
 function setColor() {
     (random) ? color = randomColor() : color;
