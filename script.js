@@ -3,9 +3,11 @@ const clearButton = document.querySelector('#clear-button');
 const changeButton = document.querySelector('#change-button');
 const changeColor = document.querySelector('#colorpicker');
 const randomButton = document.querySelector('#random-button');
+const gridLinesButton = document.querySelector('#grid-lines-button');
 let size=16;
 let paint = false;
 let random = true;
+let gridLines = true;
 
 clearButton.addEventListener("click", resetGrid);
 changeButton.addEventListener("click", changeSize);
@@ -13,6 +15,7 @@ window.addEventListener("load", setGrid);
 container.addEventListener("click", setPainting);
 randomButton.addEventListener("click", setRandom);
 changeColor.addEventListener('input', chooseColor);
+gridLinesButton.addEventListener("click", toggleGridLines);
 
 function setColor() {
     (random) ? color = randomColor() : color;
@@ -21,6 +24,17 @@ function setColor() {
 
 function setRandom() {
     random = true;
+}
+
+function toggleGridLines () {
+    let allItems = container.childNodes; 
+    if (gridLines) {
+        allItems.forEach(item => (item.style.border = "white"));
+        gridLines = false;
+    } else {
+        allItems.forEach(item => (item.style.border = "1px solid rgb(0, 0, 0)"));
+        gridLines = true;
+    }
 }
 
 function chooseColor() {
