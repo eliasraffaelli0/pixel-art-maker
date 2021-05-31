@@ -11,7 +11,7 @@ let random = false;
 let gridLines = true;
 let eraser = false;
 let color = "black";
-//to save the last color used before eraser is activated
+//para guardar el ultimo colo usado antes de que activen el eraser:
 let colorTemp;
 
 clearButton.addEventListener("click", resetGrid);
@@ -26,7 +26,6 @@ gridLinesButton.addEventListener("click", toggleGridLines);
 function toggleEraser() {
     if (!eraser){
         colorTemp = color;
-        console.log(colorTemp)
         color = "#FFF";
         eraser = true;
         random = false;
@@ -49,6 +48,10 @@ function setColor() {
 
 function setRandom() {
     random = true;
+    //las siguientes lines son por si activan el color random mientras está el eraser activado
+    eraser = true;
+    colorTemp = color;
+    toggleEraser();
 }
 
 function toggleGridLines () {
@@ -65,6 +68,10 @@ function toggleGridLines () {
 function chooseColor() {
     random = false;
     color = this.value;
+    //las siguientes lines son por si activan seleccionador de color mientras está el eraser activado
+    eraser = true;
+    colorTemp = color;
+    toggleEraser();
 }
 
 function setGrid() {
