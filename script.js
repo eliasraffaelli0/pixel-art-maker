@@ -88,6 +88,7 @@ function setGrid() {
 
 function setPainting() {
     paint = !paint;
+    paint ? container.style.cursor = "pointer" : container.style.cursor = "";
 }
 
 function randomColor() {
