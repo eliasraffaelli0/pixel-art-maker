@@ -1,3 +1,5 @@
+const MAX_HISTORY_SIZE = 200;
+
 const container = document.querySelector('#grid-container');
 const clearButton = document.querySelector('#clear-button');
 const changeButton = document.querySelector('#change-button');
@@ -133,7 +135,7 @@ function setPainting() {
     if (paint) {
         container.style.cursor = "pointer";
         if (!isPainting) {
-            saveState(); // Guardamos el estado justo antes de comenzar a pintar
+            // saveState(); // Guardamos el estado justo antes de comenzar a pintar
             redoHistory = []; // Limpiamos el historial de redo ya que es un nuevo paso
         }
         isPainting = true;
@@ -206,13 +208,20 @@ function saveState() {
     container.childNodes.forEach(item => {
         currentGridState.push(item.style.backgroundColor || "white"); // Guardar el color de fondo de cada celda
     });
+
     history.push([...currentGridState]); // Guardar una copia del estado
+    if (history.length > MAX_HISTORY_SIZE) {
+        history.shift(); // Eliminar el estado más antiguo si se supera el límite
+    }
 }
 
 // Deshacer el último paso
 function undoStep() {
     if (history.length > 1) { // Dejar al menos un estado inicial para evitar borrar todo
         redoHistory.push(history.pop()); // Guardar el último estado en redoHistory
+        if (redoHistory.length > MAX_HISTORY_SIZE) {
+            redoHistory.shift(); // Eliminar el estado más antiguo si se supera el límite
+        }
         const previousState = history[history.length - 1]; // Recuperar el penúltimo estado guardado
         restoreGrid(previousState); // Restaurar la cuadrícula
     } else {
@@ -225,6 +234,9 @@ function redoStep() {
     if (redoHistory.length > 0) {
         const nextState = redoHistory.pop(); // Recuperar el último paso de redoHistory
         history.push([...nextState]); // Guardar este estado en el historial de "Undo"
+        if (history.length > MAX_HISTORY_SIZE) {
+            history.shift(); // Eliminar el estado más antiguo si se supera el límite
+        }
         restoreGrid(nextState); // Restaurar la cuadrícula
     } else {
         alert('No hay más pasos para rehacer.');
