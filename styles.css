@@ -22,7 +22,7 @@ h1 {
     background-color: rgb(255, 255, 255);
     width: 500px;
     height: 500px;
-    margin: 5   px;
+    margin: 5px;
 }
 .gridItem {
     background-color: rgb(255, 255, 255);
@@ -51,4 +51,26 @@ button:active {
 
 .color-button {
     padding: 3px;
+}
+
+#color-history {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    left: -40px;
+    margin-top: 5px;
+}
+
+.color-square {
+    width: 30px; 
+    height: 30px; 
+    margin: 2px;
+    cursor: pointer;
+    border: 1px solid #000; 
+}
+
+.container {
+    display: flex;
+    justify-content: center; 
+    position: relative;
 }

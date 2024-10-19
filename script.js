@@ -1,4 +1,6 @@
 const MAX_HISTORY_SIZE = 200;
+const MAX_COLOR_HISTORY_SIZE = 10;
+let colorHistory = [];
 
 const container = document.querySelector('#grid-container');
 const clearButton = document.querySelector('#clear-button');
@@ -111,7 +113,8 @@ function toggleGridLines () {
 function chooseColor() {
     random = false;
     color = this.value;
-    //las siguientes lines son por si activan seleccionador de color mientras está el eraser activado
+
+    // Las siguientes líneas son por si activan seleccionador de color mientras está el eraser activado
     eraser = true;
     colorTemp = color;
     toggleEraser();
@@ -134,6 +137,9 @@ function setPainting() {
 
     if (paint) {
         container.style.cursor = "pointer";
+
+        // Añadir el color al historial
+        addColorToHistory(color);
         if (!isPainting) {
             // saveState(); // Guardamos el estado justo antes de comenzar a pintar
             redoHistory = []; // Limpiamos el historial de redo ya que es un nuevo paso
@@ -298,4 +304,32 @@ function lightenColor(color, amount = 0.1) {
     const rgb = color.match(/\d+/g).map(Number);
     const lightened = rgb.map(channel => Math.min(255, Math.floor(channel + (255 - channel) * amount))); // Asegurarse de que no supere 255
     return `rgb(${lightened.join(", ")})`; // Devolver el nuevo color en formato RGB
+}
+
+// Función para agregar un color al historial
+function addColorToHistory(newColor) {
+    // Evitar duplicados en el historial
+    if (!colorHistory.includes(newColor)) {
+        colorHistory.push(newColor);
+        if (colorHistory.length > MAX_COLOR_HISTORY_SIZE) {
+            colorHistory.shift(); // Eliminar el color más antiguo si se supera el límite
+        }
+    }
+    updateColorHistoryDisplay();
+}
+
+function updateColorHistoryDisplay() {
+    const colorHistoryContainer = document.querySelector('#color-history'); 
+    colorHistoryContainer.innerHTML = ''; // Limpiar el contenedor
+
+    colorHistory.forEach(squareColor => {
+        const colorSquare = document.createElement('div');
+        colorSquare.style.backgroundColor = squareColor;
+        colorSquare.classList.add('color-square'); 
+        colorSquare.addEventListener('click', () => {
+            color = squareColor; // Cambia el color seleccionado al hacer clic en el cuadrado
+            changeColor.value = squareColor; // Actualiza el input del color
+        });
+        colorHistoryContainer.appendChild(colorSquare);
+    });
 }
