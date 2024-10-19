@@ -186,13 +186,20 @@ function resetGrid() {
 
 // Al cambiar el tamaño de la cuadrícula también se reinicia el historial
 function changeSize() {
-    let newSize = prompt('Enter a new size between 1 and 80! :)');
+    let newSize = prompt('Enter a new size between 1 and 100! :)');
     if (newSize !== null){
-        if ((isNaN(newSize)) || (newSize < 1 || newSize > 80)) {
-            alert('The number has to be between 1 and 80!');
+        if ((isNaN(newSize)) || (newSize < 1 || newSize > 100)) {
+            alert('The number has to be between 1 and 100!');
             changeSize();
         } else {
             size = parseInt(newSize);
+            if(size > 80) {
+                container.style.width = '600px'; 
+                container.style.height = '600px';
+            } else {
+                container.style.width = '500px'; 
+                container.style.height = '500px';
+            }
             clearGrid();
             container.style.gridTemplateColumns = `repeat(${size}, 1fr)`;
             setGrid();
