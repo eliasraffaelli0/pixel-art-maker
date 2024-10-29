@@ -19,20 +19,19 @@ let color = "black";
 let colorTemp;
 const undoButton = document.querySelector('#undo-button');
 const redoButton = document.querySelector('#redo-button');
-let history = []; // Para almacenar los estados de la cuadrícula
-let redoHistory = []; // Para almacenar los pasos deshechos
-let isPainting = false; // Variable para controlar cuándo se empieza y se deja de pintar
+let history = [];
+let redoHistory = [];
+let isPainting = false;
 
 const shadeButton = document.querySelector('#shade-button');
-let shading = false; // Variable para controlar cuándo está activa la funcionalidad de sombreado
+let shading = false;
 
 const lightenButton = document.querySelector('#lighten-button');
-let lightening = false; // Variable para controlar cuándo está activa la funcionalidad de aclarar
+let lightening = false;
 
-// clearButton.addEventListener("click", resetGrid);
 clearButton.addEventListener("click", function() {
     if (window.confirm("¿Estás segurx de que quieres limpiar el tablero?")) {
-        resetGrid(); // Llama a la función para limpiar la cuadrícula
+        resetGrid(); 
     }
 });
 changeButton.addEventListener("click", changeSize);
@@ -42,29 +41,20 @@ randomButton.addEventListener("click", setRandom);
 changeColor.addEventListener('input', chooseColor);
 eraserButton.addEventListener("click", toggleEraser);
 gridLinesButton.addEventListener("click", toggleGridLines);
-// Escuchar el evento del botón de "Undo"
 undoButton.addEventListener("click", undoStep);
-
-// Escuchar el evento del botón de "Redo"
 redoButton.addEventListener("click", redoStep);
-
-// Event listener para el botón de sombreado
 shadeButton.addEventListener("click", toggleShading);
-
-// Event listener para el botón de aclarado
 lightenButton.addEventListener("click", toggleLightening);
 
-// Agregar un event listener para detectar Ctrl+Z y Ctrl+Y
+// event listener para detectar Ctrl+Z y Ctrl+Y
 document.addEventListener('keydown', function(event) {
     if (event.ctrlKey && event.key === 'z') {
-        // Ctrl + Z -> Deshacer
         undoStep();
-        event.preventDefault(); // Evitar el comportamiento por defecto del navegador
+        event.preventDefault(); 
     }
     if (event.ctrlKey && event.key === 'y') {
-        // Ctrl + Y -> Rehacer
         redoStep();
-        event.preventDefault(); // Evitar el comportamiento por defecto del navegador
+        event.preventDefault(); 
     }
 });
 
@@ -93,6 +83,9 @@ function setColor() {
 
 function setRandom() {
     random = true;
+    randomButton.style.backgroundColor = "#333";
+    randomButton.style.border = "2px solid #222";
+    randomButton.style.color = "#FFF"
     //las siguientes lines son por si activan el color random mientras está el eraser activado
     eraser = true;
     colorTemp = color;
@@ -112,6 +105,10 @@ function toggleGridLines () {
 
 function chooseColor() {
     random = false;
+    randomButton.style.backgroundColor = "#F0EEEE";
+    randomButton.style.border = "2px solid #d3dae8";
+    randomButton.style.color = "#000"
+
     color = this.value;
 
     // Las siguientes líneas son por si activan seleccionador de color mientras está el eraser activado
@@ -138,17 +135,17 @@ function setPainting() {
     if (paint) {
         container.style.cursor = "pointer";
 
-        // Añadir el color al historial
+        // Guardar el color en el historial
         addColorToHistory(color);
         if (!isPainting) {
-            // saveState(); // Guardamos el estado justo antes de comenzar a pintar
-            redoHistory = []; // Limpiamos el historial de redo ya que es un nuevo paso
+            // saveState(); 
+            redoHistory = []; 
         }
         isPainting = true;
     } else {
         container.style.cursor = "";
         isPainting = false;
-        saveState(); // Guardamos el estado después de terminar de pintar
+        saveState();
     }
 }
 
@@ -163,28 +160,26 @@ function randomColor() {
     return colorStr;
 }
 
-// Modificar la función mouseOver
 function mouseOver(aItem) {
     if (paint) {
-        const currentColor = aItem.style.backgroundColor || "white"; // Obtener el color actual
+        const currentColor = aItem.style.backgroundColor || "white";
         if (shading) {
-            aItem.style.backgroundColor = darkenColor(currentColor); // Oscurecer el color actual
+            aItem.style.backgroundColor = darkenColor(currentColor); 
         } else if (lightening) {
-            aItem.style.backgroundColor = lightenColor(currentColor); // Aclarar el color actual
+            aItem.style.backgroundColor = lightenColor(currentColor);
         } else {
-            aItem.style.backgroundColor = setColor(); // Aplicar el color seleccionado
+            aItem.style.backgroundColor = setColor(); 
         }
     }
 }
 
-// Modificar la función para resetear la cuadrícula y guardar el estado inicial
+
 function resetGrid() {
     let allItems = container.childNodes; 
     allItems.forEach(item => (item.style.backgroundColor = "white"));
-    saveState(); // Guardar el estado después de limpiar la cuadrícula
+    saveState();
 }
 
-// Al cambiar el tamaño de la cuadrícula también se reinicia el historial
 function changeSize() {
     let newSize = prompt('Enter a new size between 1 and 100! :)');
     if (newSize !== null){
@@ -203,19 +198,17 @@ function changeSize() {
             clearGrid();
             container.style.gridTemplateColumns = `repeat(${size}, 1fr)`;
             setGrid();
-            saveState(); // Guardar el estado después de cambiar el tamaño
+            saveState();
         }
     }
 }
 
-// Limpiar la cuadrícula
 function clearGrid(){
     while(container.firstChild){
         container.removeChild(container.firstChild);
     }
 }
 
-// Guardar el estado actual de la cuadrícula
 function saveState() {
     let currentGridState = [];
     container.childNodes.forEach(item => {
@@ -227,39 +220,39 @@ function saveState() {
         history.shift(); // Eliminar el estado más antiguo si se supera el límite
     }
 }
-
-// Deshacer el último paso
+o
 function undoStep() {
     if (history.length > 1) { // Dejar al menos un estado inicial para evitar borrar todo
-        redoHistory.push(history.pop()); // Guardar el último estado en redoHistory
+        redoHistory.push(history.pop());
+        // Eliminar el estado más antiguo si se supera el límite
         if (redoHistory.length > MAX_HISTORY_SIZE) {
-            redoHistory.shift(); // Eliminar el estado más antiguo si se supera el límite
+            redoHistory.shift(); 
         }
         const previousState = history[history.length - 1]; // Recuperar el penúltimo estado guardado
-        restoreGrid(previousState); // Restaurar la cuadrícula
+        restoreGrid(previousState);
     } else {
         alert('No hay más pasos para deshacer.');
     }
 }
 
-// Rehacer el último paso deshecho
 function redoStep() {
     if (redoHistory.length > 0) {
-        const nextState = redoHistory.pop(); // Recuperar el último paso de redoHistory
-        history.push([...nextState]); // Guardar este estado en el historial de "Undo"
+        const nextState = redoHistory.pop();
+        history.push([...nextState]); 
+         // Eliminar el estado más antiguo si se supera el límite
         if (history.length > MAX_HISTORY_SIZE) {
-            history.shift(); // Eliminar el estado más antiguo si se supera el límite
+            history.shift();
         }
-        restoreGrid(nextState); // Restaurar la cuadrícula
+        restoreGrid(nextState);
     } else {
         alert('No hay más pasos para rehacer.');
     }
 }
 
-// Restaurar la cuadrícula a un estado anterior
+
 function restoreGrid(gridState) {
     container.childNodes.forEach((item, index) => {
-        item.style.backgroundColor = gridState[index]; // Restaurar el color de fondo de cada celda
+        item.style.backgroundColor = gridState[index]; 
     });
 }
 
@@ -277,10 +270,9 @@ function toggleShading() {
         shadeButton.style.border = "2px solid #d3dae8";
         shadeButton.style.color = "#000"
     }
-    // shadeButton.style.backgroundColor = shading ? "#333" : "#F0EEEE"; // Cambiar el color del botón
+    // shadeButton.style.backgroundColor = shading ? "#333" : "#F0EEEE"; 
 }
 
-// Función para oscurecer un color
 function darkenColor(color, amount = 0.1) {
     // Convertir el color a RGB
     const rgb = color.match(/\d+/g).map(Number);
@@ -288,7 +280,6 @@ function darkenColor(color, amount = 0.1) {
     return `rgb(${darkened.join(", ")})`; // Devolver el nuevo color en formato RGB
 }
 
-// Cambiar el modo de aclarado
 function toggleLightening() {
     lightening = !lightening;
     if (lightening){
@@ -302,10 +293,9 @@ function toggleLightening() {
         lightenButton.style.border = "2px solid #d3dae8";
         lightenButton.style.color = "#000"
     }
-    // lightenButton.style.backgroundColor = lightening ? "#333" : "#F0EEEE"; // Cambiar el color del botón
+    // lightenButton.style.backgroundColor = lightening ? "#333" : "#F0EEEE";
 }
 
-// Función para aclarar un color
 function lightenColor(color, amount = 0.1) {
     // Convertir el color a RGB
     const rgb = color.match(/\d+/g).map(Number);
@@ -313,10 +303,9 @@ function lightenColor(color, amount = 0.1) {
     return `rgb(${lightened.join(", ")})`; // Devolver el nuevo color en formato RGB
 }
 
-// Función para agregar un color al historial
 function addColorToHistory(newColor) {
     // Evitar duplicados en el historial
-    if (!colorHistory.includes(newColor)) {
+    if (!colorHistory.includes(newColor) && !random) {
         colorHistory.push(newColor);
         if (colorHistory.length > MAX_COLOR_HISTORY_SIZE) {
             colorHistory.shift(); // Eliminar el color más antiguo si se supera el límite
@@ -336,6 +325,10 @@ function updateColorHistoryDisplay() {
         colorSquare.addEventListener('click', () => {
             color = squareColor; // Cambia el color seleccionado al hacer clic en el cuadrado
             changeColor.value = squareColor; // Actualiza el input del color
+            random = false;
+            randomButton.style.backgroundColor = "#F0EEEE";
+            randomButton.style.border = "2px solid #d3dae8";
+            randomButton.style.color = "#000"
         });
         colorHistoryContainer.appendChild(colorSquare);
     });
